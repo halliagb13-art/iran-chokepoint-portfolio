@@ -22,7 +22,7 @@ st.markdown(
 )
 
 st.sidebar.header("Controls")
-gpr_method = st.sidebar.selectbox("GPR Source", ["published", "deepseek", "auto"], index=0)
+gpr_method = st.sidebar.selectbox("GPR Source", ["published", "zen", "auto"], index=0)
 run_pipeline = st.sidebar.button("Run / Refresh Pipeline")
 
 if "results" not in st.session_state or run_pipeline:
