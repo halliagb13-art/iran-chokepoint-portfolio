@@ -84,10 +84,13 @@ def fetch_all_assets(
                 series.name = key
                 series.index = pd.to_datetime(series.index)
 
-                if save:
-                    series.to_frame().to_parquet(cache_paths[key])
-
                 frames[key] = series
+
+                if save:
+                    try:
+                        series.to_frame().to_parquet(cache_paths[key])
+                    except Exception as e:
+                        logger.warning("Failed to cache %s (%s): %s", ticker, key, e)
             except Exception as e:
                 logger.warning("Failed to parse %s (%s): %s", ticker, key, e)
 

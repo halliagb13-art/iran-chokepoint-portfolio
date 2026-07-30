@@ -40,6 +40,9 @@ def run_event_study(
 ) -> dict[str, EventStudyResult]:
     results = {}
 
+    if prices.empty or prices.columns.empty:
+        return results
+
     for col in prices.columns:
         series = prices[col].dropna()
         ser_returns = series.pct_change().dropna()
@@ -109,11 +112,12 @@ def run_event_study(
 
 
 def summarize_results(results: dict[str, EventStudyResult]) -> pd.DataFrame:
+    cols = [
+        "asset", "car_event_window", "car_p_value", "hit_rate",
+        "num_events", "aar_peak", "aar_trough", "vol_abnormal",
+    ]
     if not results:
-        return pd.DataFrame(columns=[
-            "asset", "car_event_window", "car_p_value", "hit_rate",
-            "num_events", "aar_peak", "aar_trough", "vol_abnormal",
-        ])
+        return pd.DataFrame(columns=cols)
     rows = []
     for asset, res in results.items():
         rows.append({
@@ -126,4 +130,9 @@ def summarize_results(results: dict[str, EventStudyResult]) -> pd.DataFrame:
             "aar_trough": round(res.aar.min(), 4),
             "vol_abnormal": round(res.aar.std(), 4),
         })
-    return pd.DataFrame(rows).sort_values("car_event_window", key=abs, ascending=False)
+    if not rows:
+        return pd.DataFrame(columns=cols)
+    try:
+        return pd.DataFrame(rows).sort_values("car_event_window", key=abs, ascending=False)
+    except KeyError:
+        return pd.DataFrame(rows, columns=cols)
