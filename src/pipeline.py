@@ -36,6 +36,10 @@ def run_full_pipeline(
     results["prices"] = prices
     results["returns"] = returns
 
+    if prices.empty:
+        logger.error("No market data — returning partial results")
+        return results
+
     # 3. Event study
     es_results = run_event_study(prices, event_dates)
     es_summary = summarize_results(es_results)

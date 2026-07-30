@@ -33,6 +33,11 @@ if "results" not in st.session_state or run_pipeline:
 
 res = st.session_state.results
 
+if res.get("returns") is None or res["returns"].empty:
+    st.error("No market data loaded. The pipeline may be rate-limited by Yahoo Finance. Try again in a few minutes, or use the 'zen' GPR source to run with synthetic data.")
+    st.info("You can also clone this repo and run `streamlit run dashboard/app.py` locally with a better internet connection.")
+    st.stop()
+
 tab1, tab2, tab3, tab4 = st.tabs([
     "Chokepoint Risk Monitor",
     "Event Study",

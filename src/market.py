@@ -40,6 +40,9 @@ def fetch_all_assets(
     if cached:
         logger.info("Using cached data for %d/%d assets", len(cached), len(keys))
 
+    if save:
+        MARKET_DIR.mkdir(parents=True, exist_ok=True)
+
     needs_fetch = [k for k in keys if k not in cached]
     frames = {}
 
