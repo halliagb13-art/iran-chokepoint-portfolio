@@ -121,11 +121,12 @@ with tab2:
         st.dataframe(es_summary, use_container_width=True)
 
         es_detail = res.get("event_study_detailed", {})
-        asset_choice = st.selectbox(
-            "Select asset to view AAR/CAR",
-            options=list(es_detail.keys()),
-        )
-        if asset_choice in es_detail:
+        asset_options = list(es_detail.keys())
+        if asset_options:
+            asset_choice = st.selectbox(
+                "Select asset to view AAR/CAR",
+                options=asset_options,
+            )
             ed = es_detail[asset_choice]
             fig_es = make_subplots(rows=2, cols=1, shared_xaxes=True,
                                     subplot_titles=("Average Abnormal Return (AAR)",
