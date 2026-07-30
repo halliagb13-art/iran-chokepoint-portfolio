@@ -61,9 +61,6 @@ def run_event_study(
         if not all_abnormal:
             continue
 
-        if not all_abnormal:
-            continue
-
         aligned_relative = []
         for abnormal in all_abnormal:
             rel = pd.Series(
@@ -112,6 +109,11 @@ def run_event_study(
 
 
 def summarize_results(results: dict[str, EventStudyResult]) -> pd.DataFrame:
+    if not results:
+        return pd.DataFrame(columns=[
+            "asset", "car_event_window", "car_p_value", "hit_rate",
+            "num_events", "aar_peak", "aar_trough", "vol_abnormal",
+        ])
     rows = []
     for asset, res in results.items():
         rows.append({
